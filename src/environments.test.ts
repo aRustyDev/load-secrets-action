@@ -2,8 +2,8 @@ import * as core from "@actions/core";
 import { loadEnvironmentSecrets } from "./environments";
 import { envManagedVariables, envServiceAccountToken } from "./constants";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { __mockGetVariables, __mockCreateClient } = require("@1password/sdk");
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
+const { mockGetVariables, mockCreateClient } = require("@1password/sdk");
 
 beforeEach(() => {
 	jest.clearAllMocks();
@@ -26,7 +26,7 @@ describe("loadEnvironmentSecrets", () => {
 
 	it("should create client with service account token", async () => {
 		await loadEnvironmentSecrets(testEnvironmentId, true);
-		expect(__mockCreateClient).toHaveBeenCalledWith({
+		expect(mockCreateClient).toHaveBeenCalledWith({
 			auth: "ops_test_token",
 			integrationName: "1Password GitHub Action",
 			integrationVersion: "v1.0.0",
@@ -35,7 +35,7 @@ describe("loadEnvironmentSecrets", () => {
 
 	it("should call getVariables with the environment ID", async () => {
 		await loadEnvironmentSecrets(testEnvironmentId, true);
-		expect(__mockGetVariables).toHaveBeenCalledWith(testEnvironmentId);
+		expect(mockGetVariables).toHaveBeenCalledWith(testEnvironmentId);
 	});
 
 	it("should export variables as env vars when shouldExportEnv is true", async () => {
@@ -62,7 +62,8 @@ describe("loadEnvironmentSecrets", () => {
 	});
 
 	it("should not call setSecret for empty values", async () => {
-		__mockGetVariables.mockResolvedValueOnce({
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+		mockGetVariables.mockResolvedValueOnce({
 			variables: [{ name: "EMPTY", value: "", masked: false }],
 		});
 		await loadEnvironmentSecrets(testEnvironmentId, true);
@@ -78,7 +79,8 @@ describe("loadEnvironmentSecrets", () => {
 	});
 
 	it("should warn when no variables found", async () => {
-		__mockGetVariables.mockResolvedValueOnce({ variables: [] });
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+		mockGetVariables.mockResolvedValueOnce({ variables: [] });
 		await loadEnvironmentSecrets(testEnvironmentId, true);
 		expect(core.warning).toHaveBeenCalledWith(
 			expect.stringContaining("No variables found"),

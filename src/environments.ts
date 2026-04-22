@@ -8,6 +8,8 @@ import { envManagedVariables, envServiceAccountToken } from "./constants";
  * This is an alternative to the op CLI path used by loadSecrets().
  * When `environment-id` input is provided, this function is called
  * instead of the CLI-based flow.
+ * @param environmentId - The 1Password Environment ID to load variables from.
+ * @param shouldExportEnv - Whether to export variables as environment variables or step outputs.
  */
 export const loadEnvironmentSecrets = async (
 	environmentId: string,

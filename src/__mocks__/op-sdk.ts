@@ -1,4 +1,4 @@
-const mockGetVariables = jest.fn(() =>
+const mockGetVariables = jest.fn(async () =>
 	Promise.resolve({
 		variables: [
 			{ name: "DB_HOST", value: "localhost", masked: false },
@@ -7,7 +7,7 @@ const mockGetVariables = jest.fn(() =>
 	}),
 );
 
-const mockCreateClient = jest.fn(() =>
+const mockCreateClient = jest.fn(async () =>
 	Promise.resolve({
 		environments: {
 			getVariables: mockGetVariables,
@@ -17,6 +17,6 @@ const mockCreateClient = jest.fn(() =>
 
 module.exports = {
 	createClient: mockCreateClient,
-	__mockGetVariables: mockGetVariables,
-	__mockCreateClient: mockCreateClient,
+	mockGetVariables,
+	mockCreateClient,
 };
