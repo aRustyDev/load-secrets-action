@@ -14,6 +14,9 @@ inputs:
   version:
     description: Specify which 1Password CLI version to install. Defaults to "latest".
     default: "latest"
+  environment-id:
+    description: "1Password Environment ID. When set, loads all variables from the specified Environment using the 1Password SDK instead of op:// secret references."
+    required: false
 runs:
   using: "node24"
   main: "dist/index.js"
