@@ -4,6 +4,7 @@ import { validateCli } from "@1password/op-js";
 import { installCliOnGithubActionRunner } from "./op-cli-installer";
 import { loadSecrets, unsetPrevious, validateAuth } from "./utils";
 import { envFilePath } from "./constants";
+import { loadEnvironmentSecrets } from "./environments";
 
 const loadSecretsAction = async () => {
 	try {
@@ -18,6 +19,13 @@ const loadSecretsAction = async () => {
 
 		// Validate that a proper authentication configuration is set for the CLI
 		validateAuth();
+
+		// Check if environment-id is provided — use SDK path instead of CLI
+		const environmentId = core.getInput("environment-id");
+		if (environmentId) {
+			await loadEnvironmentSecrets(environmentId, shouldExportEnv);
+			return;
+		}
 
 		// Set environment variables from OP_ENV_FILE
 		const file = process.env[envFilePath];
